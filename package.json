@@ -1,0 +1,20 @@
+{
+  "name": "yasuda-nyan",
+  "version": "0.0.1",
+  "description": "This repository has some benchmarks and code examples",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "performance"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "benchmark": "^1.0.0",
+    "func-comparator": "^0.6.1",
+    "lodash": "^3.9.3",
+    "minimist": "^1.1.1",
+    "neo-async": "^1.2.1"
+  }
+}
