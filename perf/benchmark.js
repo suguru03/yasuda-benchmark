@@ -1,30 +1,25 @@
 'use strict';
 
 var _ = require('lodash');
-var async = require('neo-async');
 var Benchmark = require('benchmark');
 
-module.exports = function(config, callback) {
-  var defaults = config.defaults;
-  var tasks = _.omit(config, 'defaults');
-
-  async.eachSeries(tasks, iterator, callback);
-
-  function iterator(task, name, done) {
+module.exports = function(defaults) {
+  return function benchmark(task, name, callback) {
     var count = task.count || defaults.count;
     var data = {};
-    task.setup.call(data, count);
+    var setup = task.setup;
+    if (setup) {
+      setup.call(data, count);
+    }
     var expect = data.expect;
-    var failed = {};
+    var result = {};
 
     var suite = new Benchmark.Suite();
     _.forEach(task.funcs, function(func, key) {
       if (expect) {
-        failed[key] = 0;
+        result[key] = [];
         suite.add(key, function() {
-          if (expect !== func.call(data)) {
-            ++failed[key];
-          }
+          result[key].push(func.call(data));
         });
       } else {
         suite.add(key, function() {
@@ -38,7 +33,6 @@ module.exports = function(config, callback) {
     //   console.log(event.target + ', ' + (+mean.toPrecision(2)) + 'ms per run');
     // })
     .on('complete', function() {
-      console.log('//==== ' + name + ' =========//');
       _.chain(this)
         .map(function(data) {
           return {
@@ -50,15 +44,23 @@ module.exports = function(config, callback) {
         .forEach(function(data, index) {
           var name = data.name;
           var mean = data.mean * 1000;
-          if (expect && failed[name]) {
-            console.log('[' + (++index) + ']', '"' + name + '"', (mean.toPrecision(2)) + 'ms', '[Failed] ' + failed[name]);
+          var failed;
+          if (expect) {
+            failed = _.reduce(result[name], function(count, result) {
+              if (!_.isEqual(expect, result)) {
+                return count + 1;
+              }
+            }, 0);
+          }
+          if (failed) {
+            console.log('[' + (++index) + ']', '"' + name + '"', (mean.toPrecision(2)) + 'ms', '[Failed] ' + failed);
           } else {
             console.log('[' + (++index) + ']', '"' + name + '"', (mean.toPrecision(2)) + 'ms');
           }
         })
         .value();
-      done();
+      callback();
     })
     .run();
-  }
+  };
 };

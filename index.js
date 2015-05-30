@@ -8,21 +8,34 @@ var async = require('neo-async');
 var argv = require('minimist')(process.argv.slice(2));
 var conf = argv.c || argv.conf; // -c <path>, --conf <path>
 var benchmark = argv.b || argv.bench || argv.benchmark; // -b benchmark, --bench func-comparator, --benchmark b
+
+var config = require(path.resolve(process.env.PWD, conf));
+var defaults = _.defaults(config.defaults || {}, {
+  count: 10000,
+  times: 10000 // for func-comparator
+});
 var benchmarks = [
   'benchmark.js',
   'func-comparator'
 ];
-if (benchmark) {
-  var regExp = new RegExp('^' + benchmark);
-  benchmarks = _.filter(benchmarks, function(benchmark) {
-    return regExp.test(benchmark);
-  });
-}
+var regExp = new RegExp('^' + benchmark);
+benchmarks = _.chain(benchmarks)
+  .filter(function(name) {
+    return !benchmark || regExp.test(name);
+  })
+  .map(function(name) {
+    var requirePath = path.resolve('./perf', name);
+    return {
+      name: name,
+      func: require(requirePath)(defaults)
+    };
+  })
+  .value();
 
-var config = require(path.resolve(process.env.PWD, conf));
-
-async.eachSeries(benchmarks, function(name, next) {
-  console.log('**** ' + name + ' ****');
-  var requirePath = path.resolve('./perf', name);
-  require(requirePath)(config, next);
+async.eachSeries(_.omit(config, 'defaults'), function(task, taskName, done) {
+  console.log('//==== ' + taskName + ' =========//');
+  async.eachSeries(benchmarks, function(benchmark, next) {
+    console.log('**** ' + benchmark.name + ' ****');
+    benchmark.func(task, taskName, next);
+  }, done);
 });
