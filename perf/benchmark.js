@@ -16,10 +16,17 @@ module.exports = function(defaults) {
 
     var suite = new Benchmark.Suite();
     _.forEach(task.funcs, function(func, key) {
-      if (expect) {
+      if (_.isObject(expect)) {
         result[key] = [];
         suite.add(key, function() {
           result[key].push(func.call(data));
+        });
+      } else if (expect !== undefined) {
+        result[key] = 0;
+        suite.add(key, function() {
+          if (expect !== func.call(data)) {
+            result[key]++;
+          }
         });
       } else {
         suite.add(key, function() {
@@ -41,21 +48,24 @@ module.exports = function(defaults) {
           };
         })
         .sortBy('mean')
-        .forEach(function(data, index) {
+        .forEach(function(data, index, array) {
           var name = data.name;
           var mean = data.mean * 1000;
+          var diff = mean / (_.first(array).mean * 1000);
           var failed;
-          if (expect) {
+          if (_.isObject(expect)) {
             failed = _.reduce(result[name], function(count, result) {
               if (!_.isEqual(expect, result)) {
                 return count + 1;
               }
             }, 0);
+          } else if (expect !== undefined) {
+            failed = result[name];
           }
           if (failed) {
             console.log('[' + (++index) + ']', '"' + name + '"', (mean.toPrecision(2)) + 'ms', '[Failed] ' + failed);
           } else {
-            console.log('[' + (++index) + ']', '"' + name + '"', (mean.toPrecision(2)) + 'ms');
+            console.log('[' + (++index) + ']', '"' + name + '"', (mean.toPrecision(2)) + 'ms', '[' + diff.toPrecision(3) + ']');
           }
         })
         .value();

@@ -5,12 +5,12 @@ var _ = require('lodash');
 module.exports = {
   defaults: {
     count: 10000,
-    times: 10000 // for func-comparator
+    times: 1000000 // for func-comparator
   },
   'each:array': {
     setup: function(count) {
       this.array = _.times(count);
-      this.expect = _.sum(this.array); // check result
+      // this.expect = _.sum(this.array); // check result
     },
     funcs: {
       'Array#forEach': function() {
@@ -32,8 +32,7 @@ module.exports = {
         var sum = 0;
         var index = -1;
         var array = this.array;
-        var length = array.length;
-        while (++index < length) {
+        while (++index < array.length) {
           sum += array[index];
         }
         return sum;
@@ -82,6 +81,13 @@ module.exports = {
         while (++index < length) {
           sum += object[keys[index]];
         }
+        return sum;
+      },
+      'lodash#forOwn': function() {
+        var sum = 0;
+        _.forOwn(this.object, function(n) {
+          sum += n;
+        });
         return sum;
       },
       'lodash#forEach': function() {

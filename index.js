@@ -8,6 +8,7 @@ var async = require('neo-async');
 var argv = require('minimist')(process.argv.slice(2));
 var conf = argv.c || argv.conf; // -c <path>, --conf <path>
 var benchmark = argv.b || argv.bench || argv.benchmark; // -b benchmark, --bench func-comparator, --benchmark b
+var target = argv.t || argv.target; // -t each:array, --target each
 
 var config = require(path.resolve(process.env.PWD, conf));
 var defaults = _.defaults(config.defaults || {}, {
@@ -32,7 +33,15 @@ benchmarks = _.chain(benchmarks)
   })
   .value();
 
-async.eachSeries(_.omit(config, 'defaults'), function(task, taskName, done) {
+regExp = new RegExp('^' + target);
+config = _.chain(config)
+  .omit('defaults')
+  .pick(function(conf, key) {
+    return !target || regExp.test(key);
+  })
+  .value();
+
+async.eachSeries(config, function(task, taskName, done) {
   console.log('//==== ' + taskName + ' =========//');
   async.eachSeries(benchmarks, function(benchmark, next) {
     console.log('**** ' + benchmark.name + ' ****');

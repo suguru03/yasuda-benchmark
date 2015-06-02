@@ -24,7 +24,7 @@ module.exports = function(defaults) {
           result[key].push(func.call(data));
         };
       }
-      if (expect) {
+      if (expect !== undefined) {
         result[key] = 0;
         return function() {
           if (expect !== func.call(data)) {
