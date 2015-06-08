@@ -15,31 +15,31 @@ module.exports = {
     funcs: {
       'for': function() {
         var length = this.length;
-        var func = this.func;
+        var sum = 0;
         for (var i = 0; i < length; i++) {
-          func();
+          sum += i;
         }
       },
       'for:short': function() {
         var length = this.length;
-        var func = this.func;
+        var sum = 0;
         for (var i = 0; ++i < length;) {
-          func();
+          sum += i;
         }
       },
       'while': function() {
         var i = -1;
         var length = this.length;
-        var func = this.func;
+        var sum = 0;
         while(++i < length) {
-          func();
+          sum += i;
         }
       },
       'while:--': function() {
         var l = this.length;
-        var func = this.func;
+        var sum = 0;
         while(l--) {
-          func();
+          sum += l;
         }
       }
     }

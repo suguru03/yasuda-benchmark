@@ -47,4 +47,6 @@ async.eachSeries(config, function(task, taskName, done) {
     console.log('**** ' + benchmark.name + ' ****');
     benchmark.func(task, taskName, next);
   }, done);
+}, function(err) {
+  process.exit(!!err);
 });

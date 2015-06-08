@@ -121,8 +121,12 @@ module.exports = {
   },
   'args#30': {
     setup: function() {
-      this.func = function() {
-        return 1;
+      this.func = function(
+        arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10,
+        arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19, arg20,
+        arg21, arg22, arg23, arg24, arg25, arg26, arg27, arg28, arg29, arg30
+      ) {
+        return arg30;
       };
       this.args = _.times(30, function() {
         return {};
@@ -131,11 +135,76 @@ module.exports = {
     funcs: {
       'call': function() {
         var args = this.args;
-        return this.func.call({},
-          args[0], args[1], args[2], args[3], args[4], args[5], args[6], args[7], args[8], args[9],
-          args[10], args[11], args[12], args[13], args[14], args[15], args[16], args[17], args[18], args[19],
-          args[20], args[21], args[22], args[23], args[24], args[25], args[26], args[27], args[28], args[29]
-        );
+        switch (args.length) {
+          case 0:
+            break;
+          case 1:
+            break;
+          case 2:
+            break;
+          case 3:
+            break;
+          case 4:
+            break;
+          case 5:
+            break;
+          case 6:
+            break;
+          case 7:
+            break;
+          case 8:
+            break;
+          case 9:
+            break;
+          case 10:
+            break;
+          case 11:
+            break;
+          case 12:
+            break;
+          case 13:
+            break;
+          case 14:
+            break;
+          case 15:
+            break;
+          case 16:
+            break;
+          case 17:
+            break;
+          case 18:
+            break;
+          case 19:
+            break;
+          case 20:
+            break;
+          case 21:
+            break;
+          case 22:
+            break;
+          case 23:
+            break;
+          case 24:
+            break;
+          case 25:
+            break;
+          case 26:
+            break;
+          case 27:
+            break;
+          case 28:
+            break;
+          case 29:
+            break;
+          case 30:
+            return this.func.call({},
+              args[0], args[1], args[2], args[3], args[4], args[5], args[6], args[7], args[8], args[9],
+              args[10], args[11], args[12], args[13], args[14], args[15], args[16], args[17], args[18], args[19],
+              args[20], args[21], args[22], args[23], args[24], args[25], args[26], args[27], args[28], args[29]
+            );
+          default:
+            break;
+        }
       },
       'apply': function() {
         return this.func.apply({}, this.args);
@@ -149,7 +218,7 @@ module.exports = {
         return this;
       };
       this.args = _.times(100, function() {
-        return {};
+        return Object.create(_);
       });
     },
     funcs: {
