@@ -76,5 +76,42 @@ module.exports = {
         });
       }
     }
+  },
+  'Map': {
+    setup: function(count) {
+      var map = new Map();
+      _.times(count, function(n) {
+        map.set(n, n);
+      });
+      this.map = map;
+    },
+    funcs: {
+      'symbolIter': function() {
+        var iter = this.map[Symbol.iterator]();
+        var item;
+        var key, value;
+        while((item = iter.next()).done === false) {
+          key = item.value[0];
+          value = item.value[1];
+        }
+      },
+      'keyIter': function() {
+        var map = this.map;
+        var keyIter = map.keys();
+        var item;
+        var key, value;
+        while((item = keyIter.next().done === false)) {
+          key = item.value;
+          value = map.get(key);
+        }
+      },
+      'forEach': function() {
+        var key, value;
+        this.map.forEach(function(v, k) {
+          key = k;
+          value = v;
+        });
+      }
+    }
   }
 };
