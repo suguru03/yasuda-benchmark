@@ -1,6 +1,6 @@
-# yasuda-nyan
+# yasuda-benchmark
 
-`yasuda-nyan` has some benchmarks and code examples.
+`yasuda-benchmark` has some benchmarks and code examples.
 
 ```bash
 $ node ./ -c ./example/config

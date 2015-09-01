@@ -1,5 +1,5 @@
 {
-  "name": "yasuda-nyan",
+  "name": "yasuda-benchmark",
   "version": "0.0.1",
   "description": "This repository has some benchmarks and code examples",
   "main": "index.js",
