@@ -63,5 +63,21 @@ module.exports = {
         }
       }
     }
+  },
+  'hasOwnProperty': {
+    setup: function(count) {
+      this.obj = _.mapValues(_.times(count));
+    },
+    funcs: {
+      'normal': function() {
+        return this.obj.hasOwnProperty('hoge');
+      },
+      'call': function() {
+        return Object.hasOwnProperty.call(this.obj, 'hoge');
+      },
+      'in': function() {
+        return 'hoge' in this.obj;
+      }
+    }
   }
 };

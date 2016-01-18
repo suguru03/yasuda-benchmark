@@ -1,5 +1,6 @@
 'use strict';
-
+var bool1 = 'hoge';
+var bool2 = true;
 module.exports = {
   'if vs ifelse': {
     funcs: {
@@ -51,5 +52,35 @@ module.exports = {
         }
       }
     }
+  },
+  'true vs 1': {
+    funcs: {
+      'true': function() {
+        if (true) return;
+      },
+      'true ? 1 : 0': function() {
+        if (true ? 1 : 0) return;
+      },
+      '1': function() {
+        if (1) return;
+      }
+    }
+  },
+  'boolean': {
+    funcs: {
+      'bool1': function() {
+        if (bool1) return;
+      },
+      '!!bool1': function() {
+        if (!!bool1) return;
+      },
+      '!!bool1 === bool2': function() {
+        if (!!bool1 === bool2) return;
+      },
+      'bool1 == bool2': function() {
+        if (bool1 == bool2) return;
+      }
+    }
   }
+
 };
