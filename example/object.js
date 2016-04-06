@@ -79,5 +79,29 @@ module.exports = {
         return 'hoge' in this.obj;
       }
     }
+  },
+  'keys': {
+    setup: function(count) {
+      this.obj = _.mapValues(_.times(count));
+    },
+    funcs: {
+      'JSON.parse': function() {
+        return JSON.parse(JSON.stringify(this.obj));
+      },
+      'while': function() {
+        var obj = this.obj;
+        var keys = Object.keys(this.obj);
+        var key;
+        var i = -1;
+        var length = keys.length;
+        var newObj = {};
+        while (++i < length) {
+          key = keys[i];
+          newObj[key] = obj[key];
+        }
+        return obj;
+      }
+    }
   }
+
 };
