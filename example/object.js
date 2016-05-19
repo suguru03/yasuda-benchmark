@@ -80,13 +80,16 @@ module.exports = {
       }
     }
   },
-  'keys': {
+  'copy': {
     setup: function(count) {
       this.obj = _.mapValues(_.times(count));
     },
     funcs: {
       'JSON.parse': function() {
         return JSON.parse(JSON.stringify(this.obj));
+      },
+      'clone': function() {
+        return _.clone(this.obj);
       },
       'while': function() {
         var obj = this.obj;
@@ -102,6 +105,51 @@ module.exports = {
         return obj;
       }
     }
+  },
+  'deepCopy': {
+    count: 100,
+    setup: function(count) {
+      this.obj = _.mapValues(_.times(count), function(num) {
+        return _.mapValues(_.times(num), function(num) {
+          return _.mapValues(_.times(num));
+        });
+      });
+      var called = 0;
+      this.deepCopy = function copy(obj) {
+        ++called;
+        if (typeof obj !== 'object') {
+          return obj;
+        }
+        var result, l;
+        var i = -1;
+        if (Array.isArray(obj)) {
+          l = obj.length;
+          result = Array(l);
+          while (++i < l) {
+            result[i] = copy(obj[i]);
+          }
+        } else {
+          result = {};
+          var keys = Object.keys(obj);
+          l = keys.length;
+          while (++i < l) {
+            var key = keys[i];
+            result[key] = copy(obj[key]);
+          }
+        }
+        return result;
+      };
+    },
+    funcs: {
+      'JSON.parse': function() {
+        return JSON.parse(JSON.stringify(this.obj));
+      },
+      'cloneDeep': function() {
+        return _.cloneDeep(this.obj);
+      },
+      'deepCopy': function() {
+        return this.deepCopy(this.obj);
+      }
+    }
   }
-
 };
