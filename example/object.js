@@ -1,6 +1,7 @@
 'use strict';
 
 var _ = require('lodash');
+var dcp = require('dcp');
 
 module.exports = {
   'reference': {
@@ -106,8 +107,8 @@ module.exports = {
       }
     }
   },
-  'deepCopy': {
-    count: 100,
+  'deepCopy:1': {
+    count: 10,
     setup: function(count) {
       this.obj = _.mapValues(_.times(count), function(num) {
         return _.mapValues(_.times(num), function(num) {
@@ -139,6 +140,7 @@ module.exports = {
         }
         return result;
       };
+      dcp.define('test', this.obj);
     },
     funcs: {
       'JSON.parse': function() {
@@ -149,6 +151,59 @@ module.exports = {
       },
       'deepCopy': function() {
         return this.deepCopy(this.obj);
+      },
+      'dcp': function() {
+        return dcp.clone('test', this.obj);
+      }
+    }
+  },
+  'deepCopy:2': {
+    setup: function() {
+      this.obj = {
+        a: 1,
+        b: 'test',
+        c: [true, false, { c1: 'a' }],
+        d: { d1: { d11: { d111: { d1111: 0 }, d112: 1 } } }
+      };
+      var called = 0;
+      this.deepCopy = function copy(obj) {
+        ++called;
+        if (typeof obj !== 'object') {
+          return obj;
+        }
+        var result, l;
+        var i = -1;
+        if (Array.isArray(obj)) {
+          l = obj.length;
+          result = Array(l);
+          while (++i < l) {
+            result[i] = copy(obj[i]);
+          }
+        } else {
+          result = {};
+          var keys = Object.keys(obj);
+          l = keys.length;
+          while (++i < l) {
+            var key = keys[i];
+            result[key] = copy(obj[key]);
+          }
+        }
+        return result;
+      };
+      dcp.define('test', this.obj);
+    },
+    funcs: {
+      'JSON.parse': function() {
+        return JSON.parse(JSON.stringify(this.obj));
+      },
+      'cloneDeep': function() {
+        return _.cloneDeep(this.obj);
+      },
+      'deepCopy': function() {
+        return this.deepCopy(this.obj);
+      },
+      'dcp': function() {
+        return dcp.clone('test', this.obj);
       }
     }
   }
