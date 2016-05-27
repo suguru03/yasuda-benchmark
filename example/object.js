@@ -206,5 +206,27 @@ module.exports = {
         return dcp.clone('test', this.obj);
       }
     }
+  },
+  'shallowCopy': {
+    setup: function() {
+      this.obj = {
+        a: 1,
+        b: 'test',
+        c: [true, false, { c1: 'a' }],
+        d: { d1: { d11: { d111: { d1111: 0 }, d112: 1 } } }
+      };
+      dcp.define('test', this.obj);
+    },
+    funcs: {
+      'JSON.parse': function() {
+        return JSON.parse(JSON.stringify(this.obj));
+      },
+      'clone': function() {
+        return _.clone(this.obj);
+      },
+      'dcp': function() {
+        return dcp.shallow('test', this.obj);
+      }
+    }
   }
 };
