@@ -233,32 +233,45 @@ module.exports = {
           return n;
         });
       }
-    },
-    'array:slice': {
-      setup: function(count) {
-        this.array = _.times(count);
-        this.slice = function(array, start) {
-          start = start || 0;
-          var index = -1;
-          var length = array.length;
-
-          if (start) {
-            length -= start;
-            length = length < 0 ? 0 : length;
+    }
+  },
+  'array:slice': {
+    setup: function() {
+      var _slice = Array.prototype.slice;
+      this.callSlice = function() {
+        return _slice.call(arguments, 1);
+      };
+      this.inlineSlice = function() {
+        var l = arguments.length - 1;
+        var result = Array(l);
+        while (l--) {
+          result[l] = arguments[l + 1];
+        }
+        return result;
+      };
+      function slice(arrayLike, start) {
+          start = start|0;
+          var newLen = Math.max(arrayLike.length - start, 0);
+          var newArr = Array(newLen);
+          for(var idx = 0; idx < newLen; idx++)  {
+              newArr[idx] = arrayLike[start + idx];
           }
-          var result = Array(length);
-
-          while (++index < length) {
-            result[index] = array[index + start];
-          }
-          return result;
-        };
-      },
-      funcs: {
-        'Array#slice': function() {
-          return this.array.slice(100);
-        },
+          return newArr;
       }
+      this.funcSlice = function() {
+        slice(arguments, 1);
+      }
+    },
+    funcs: {
+      'callSlice': function() {
+        return this.callSlice(1, 2, 3, 4);
+      },
+      'inlineSlice': function() {
+        return this.inlineSlice(1, 2, 3, 4);
+      },
+      'funcSlice': function() {
+        return this.funcSlice(1, 2, 3, 4);
+      },
     }
   }
 };
