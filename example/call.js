@@ -3,8 +3,31 @@
 var _ = require('lodash');
 
 module.exports = {
+  'func': {
+    setup: function() {
+      this.obj = {
+        _value: true,
+        funcA: function() {
+          return this._value;
+        },
+        funcB: function() {
+          return this._value;
+        },
+      }
+      this.func = this.obj.funcB;
+    },
+    funcs: {
+      '()': function() {
+        return this.obj.funcB();
+      },
+      'call': function() {
+        return this.func.call(this.obj);
+      },
+    }
+  },
   'args#0': {
     setup: function() {
+      this.test = true;
       this.func = function() {
         return 1;
       };
@@ -13,20 +36,22 @@ module.exports = {
       '()': function() {
         this.func();
       },
+      '(1)': function() {
+        this.test === true && this.func();
+      },
       'call': function() {
-        this.func.call();
+        this.func.call(this);
       },
       'apply': function() {
-        this.func.apply();
+        this.func.apply(this);
       },
       'bind': function() {
-        this.func.bind()();
+        this.func.bind(this)();
       }
     }
   },
   'args#1': {
     setup: function() {
-      this.object = {};
       this.func = function() {
         return this;
       };
@@ -35,11 +60,14 @@ module.exports = {
       });
     },
     funcs: {
+      '()': function() {
+        return this.func(this.args[0]);
+      },
       'call': function() {
-        return this.func.call(this.object, this.args[0]);
+        return this.func.call(this, this.args[0]);
       },
       'apply': function() {
-        return this.func.apply(this.object, this.args);
+        return this.func.apply(this, this.args);
       }
     }
   },
