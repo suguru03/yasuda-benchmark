@@ -55,6 +55,43 @@ module.exports = {
       }
     }
   },
+  'child:inherits': {
+    setup: function() {
+      function ParentES5(value) {
+        this._value = value;
+      }
+      function ES5(value) {
+        ParentES5.call(this, value);
+      }
+      util.inherits(ES5, ParentES5);
+
+      class ParentES6 {
+        constructor(value) {
+          this._value = value;
+        }
+        get() {
+          return this._value;
+        }
+      }
+      function ES6(value) {
+        this._value = value;
+      }
+      ES6.prototype = ParentES6.prototype;
+      const es6 = new ES6(1);
+      console.log(es6.get());
+      console.log(es6 instanceof ParentES6);
+      this.ES5 = ES5;
+      this.ES6 = ES6;
+    },
+    funcs: {
+      'es5': function() {
+        return new this.ES5(1);
+      },
+      'es6': function() {
+        return new this.ES6(1);
+      }
+    }
+  },
   'parentFunction': {
     setup: function() {
       function ParentES5(value) {
@@ -227,5 +264,37 @@ module.exports = {
         return this.es6.get();
       }
     }
-  }
+  },
+  'instanceof': {
+    setup: function() {
+      class ParentES6 {
+        constructor(value) {
+          this._value = value;
+        }
+      }
+      class ES6 extends ParentES6 {
+        constructor(value) {
+          super(value);
+        }
+      }
+      this.__ES6__ = true;
+      class ES6_2 {
+        constructor(value) {
+          this.__ES6__ = true;
+          this._value = value;
+        }
+      }
+      this.ParentES6 = ParentES6;
+      this.es6 = new ES6(1);
+      this.es6_2 = new ES6_2(1);
+    },
+    funcs: {
+      'es6': function() {
+        return this.es6 instanceof this.ParentES6;
+      },
+      'es6_2': function() {
+        return this.es6_2 === this.__ES6__;
+      }
+    }
+  },
 }
