@@ -116,5 +116,28 @@ module.exports = {
         return func1();
       }
     }
+  },
+  'call:arg3': {
+    setup: function() {
+      this.func0 = function() {};
+      this.func1 = function(arg1, arg2, arg3) {};
+    },
+    funcs: {
+      'arg0:func0': function() {
+        return this.func0();
+      },
+      'arg0': function() {
+        return this.func1();
+      },
+      'arg1': function() {
+        return this.func1(1);
+      },
+      'arg2': function() {
+        return this.func1(1, 2);
+      },
+      'arg3': function() {
+        return this.func1(1, 2, 3);
+      }
+    }
   }
 };
