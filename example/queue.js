@@ -46,13 +46,15 @@ class Queue2 {
     return task;
   }
 }
-
 module.exports = {
   'queue': {
     setup: function(count) {
+      count = 8;
       this.count = count;
       this.array1 = [];
       this.array2 = Array(count);
+      this.array3 = [];
+      this.array3len = 0;
       this.queue1 = new Queue1();
       this.queue2 = new Queue2(count);
     },
@@ -76,6 +78,18 @@ module.exports = {
           const i = queue[l];
           queue[l] = undefined;
         }
+      },
+      array3: function() {
+        const queue = this.array3;
+        for (let i = 0; i < this.count; i++) {
+          queue[this.array3len++] = i;
+        }
+        let i = -1;
+        while (++i < this.array3len) {
+          const j = queue[i];
+          queue[i] = undefined;
+        }
+        this.array3len = 0;
       },
       queue1: function() {
         const queue = this.queue1;
