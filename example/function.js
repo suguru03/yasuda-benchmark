@@ -139,5 +139,40 @@ module.exports = {
         return this.func1(1, 2, 3);
       }
     }
+  },
+  'arguments': {
+    setup: function() {
+      this.es5 = function(arg) {
+        let l = arguments.length;
+        if (l <= 1) {
+          return arg;
+        }
+        const array = Array(l);
+        while (l--) {
+          array[l] = arguments[l];
+        }
+        return array;
+      };
+      this.es6 = function(...args) {
+        if (args.length <= 1) {
+          return args[0];
+        }
+        return args;
+      };
+    },
+    funcs: {
+      'es5': function() {
+        return this.es5(1);
+      },
+      'es6': function() {
+        return this.es6(1);
+      },
+      'es5wthArgs': function() {
+        return this.es5(1, 2, 3, 4, 5, 6, 7, 8, 9, 0);
+      },
+      'es6withArgs': function() {
+        return this.es6(1, 2, 3, 4, 5, 6, 7, 8, 9, 0);
+      },
+    }
   }
 };
