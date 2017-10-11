@@ -14,14 +14,13 @@
     "benchmark": "^2.1.0",
     "dcp": "^0.1.2",
     "func-comparator": "^0.6.1",
-    "lodash": "^3.9.3",
+    "lodash": "^4.17.4",
     "minimist": "^1.1.1",
     "neo-async": "^1.2.1"
   },
   "dependencies": {
     "benchmark": "^2.1.0",
     "func-comparator": "^0.6.3",
-    "lodash": "^3.10.1",
     "neo-async": "^1.8.2"
   }
 }

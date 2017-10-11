@@ -36,7 +36,7 @@ benchmarks = _.chain(benchmarks)
 regExp = new RegExp('^' + target);
 config = _.chain(config)
   .omit('defaults')
-  .pick(function(conf, key) {
+  .pickBy(function(conf, key) {
     return !target || regExp.test(key);
   })
   .value();
