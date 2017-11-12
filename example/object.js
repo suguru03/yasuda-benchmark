@@ -228,5 +228,18 @@ module.exports = {
         return dcp.shallow('test', this.obj);
       }
     }
+  },
+  'null': {
+    setup: function() {
+      this.a = {};
+    },
+    funcs: {
+      'typeof': function() {
+        return this.a && typeof this.a === 'object';
+      },
+      'insntaceof': function() {
+        return this.a instanceof Object;
+      }
+    }
   }
 };
